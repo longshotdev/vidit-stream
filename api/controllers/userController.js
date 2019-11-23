@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken"); // important
 const User = require("../models/User");
 const apiRes = require("../helpers/apiResponses");
 const isUserExist = require("../helpers/isUserExist");
+const testURL = require("../../lib/testURL");
 exports.signup = (req, res) => {
   const { username, password } = req.body;
   password.toString();
@@ -66,13 +67,18 @@ exports.login = (req, res) => {
     });
 };
 exports.getUser = (req, res) => {
-  console.log(req.params);
   User.find({ username: req.params.username })
     .exec()
     .then(user => {
-      return apiRes.successWithData(res, "User found", user[0].username);
+      return apiRes.successWithData(res, "User found", {
+        type: user[0].type,
+        avatar: user[0].avatar,
+        id: user[0]._id,
+        username: user[0].username,
+        version: user[0]._v
+      });
     })
-    .catch();
+    .catch(err => apiRes.error(res, err));
 };
 
 exports.deleteUser = (req, res, next) => {
@@ -85,4 +91,13 @@ exports.deleteUser = (req, res, next) => {
       console.log(err);
       apiRes.error(res, err);
     });
+};
+exports.changeAvatar = (req, res, next) => {
+  if (testURL(req.body.url)) {
+    User.updateOne({ username: req.params.username }, { avatar: req.body.url })
+      .then(bruh => {
+        apiRes.success(res, "Updated Avatar.");
+      })
+      .catch(err => apiRes.error(res, "error:" + err));
+  }
 };

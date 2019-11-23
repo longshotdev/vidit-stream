@@ -13,4 +13,10 @@ router.post("/signup", userController.signup);
 // POST <URL>/api/users/login // GET JWT Token
 router.post("/login", userController.login);
 
+// POST <URL>/api/users/changeAvatar/:username // Change Avatar
+router.post(
+  "/changeAvatar/:username",
+  checkAuthentication,
+  userController.changeAvatar
+);
 module.exports = router;
