@@ -35,12 +35,14 @@ exports.signup = (req, res) => {
 };
 
 exports.login = (req, res) => {
+  console.log(req.body);
   User.find({ username: req.body.username })
     .exec()
     .then(user => {
       if (user.length < 1) {
-        apiRes.validationError(res, "Incorrect Username");
+        return apiRes.validationError(res, "Incorrect Username");
       }
+      console.log(user);
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
           apiRes.validationError(res, "Incorrect Password");
