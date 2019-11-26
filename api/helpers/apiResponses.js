@@ -22,7 +22,14 @@ exports.error = function(res, msg) {
   };
   return res.status(500).json(data);
 };
-
+exports.successNoAuth = function(res, msg, data) {
+  var data = {
+    status: 11,
+    message: msg,
+    data: data
+  };
+  return res.status(200).json(data);
+};
 exports.notFound = function(res, msg) {
   var data = {
     status: 0,

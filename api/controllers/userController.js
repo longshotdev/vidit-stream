@@ -27,7 +27,29 @@ exports.signup = (req, res) => {
           });
           user
             .save()
-            .then(result => apiRes.success(res, "User Created. Sign In."))
+            .then(result => {
+              const token = jwt.sign(
+                {
+                  username: result.username,
+                  userID: result._id
+                },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "1h"
+                }
+              );
+              apiRes.successWithData(res, "User Created.", {
+                token: token,
+                validFor: "1hr",
+                userData: {
+                  type: result.type,
+                  avatar: result.avatar,
+                  id: result._id,
+                  username: result.username,
+                  version: result._v
+                }
+              });
+            })
             .catch(err => apiRes.error(res, "Error: Couldnt make user"));
         });
       }
@@ -58,7 +80,17 @@ exports.login = (req, res) => {
               expiresIn: "1h"
             }
           );
-          return apiRes.successWithData(res, "Successful Authorization", token);
+          return apiRes.successWithData(res, "Successful Authorization", {
+            token: token,
+            validFor: "1hr",
+            userData: {
+              type: user[0].type,
+              avatar: user[0].avatar,
+              id: user[0]._id,
+              username: user[0].username,
+              version: user[0]._v
+            }
+          });
         }
         apiRes.validationError(res, "Incorrect Password");
       });
@@ -96,9 +128,19 @@ exports.deleteUser = (req, res, next) => {
 };
 exports.changeAvatar = (req, res, next) => {
   if (testURL(req.body.url)) {
-    User.updateOne({ username: req.params.username }, { avatar: req.body.url })
+    User.updateOne({ _id: req.body.id }, { avatar: req.body.url })
       .then(bruh => {
-        apiRes.success(res, "Updated Avatar.");
+        User.find({ _id: req.body.id }).then(user => {
+          console.log("NIGGEEEEEE");
+          console.log(user);
+          apiRes.successNoAuth(res, "Updated Avatar.", {
+            type: user[0].type,
+            avatar: user[0].avatar,
+            id: user[0]._id,
+            username: user[0].username,
+            version: user[0]._v
+          });
+        });
       })
       .catch(err => apiRes.error(res, "error:" + err));
   }
