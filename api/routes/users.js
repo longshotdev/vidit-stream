@@ -5,7 +5,7 @@ const checkAuthentication = require("../middleware/checkAuthentication");
 const userController = require("../controllers/userController");
 
 // GET <URL>/api/users/info/:username // Get User Information
-router.get("/info/:username", checkAuthentication, userController.getUser);
+router.get("/info/:username", userController.getUser);
 
 // POST <URL>/api/users/signup // Sign User Up
 router.post("/signup", userController.signup);

@@ -1,6 +1,6 @@
 {
   "name": "vidit-stream",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "repository": "https://github.com/longshotdev/vidit-stream.git",
   "author": "AndyIsCool5463 <andyl5463@gmail.com>",
@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "http-errors": "^1.7.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.12"
+    "mongoose": "^5.7.12",
+    "socket.io": "^2.3.0"
   }
 }

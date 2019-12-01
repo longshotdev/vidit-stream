@@ -101,7 +101,7 @@ exports.login = (req, res) => {
     });
 };
 exports.getUser = (req, res) => {
-  User.find({ username: req.params.username })
+  User.find({ id: req.params.id })
     .exec()
     .then(user => {
       return apiRes.successWithData(res, "User found", {
@@ -131,8 +131,6 @@ exports.changeAvatar = (req, res, next) => {
     User.updateOne({ _id: req.body.id }, { avatar: req.body.url })
       .then(bruh => {
         User.find({ _id: req.body.id }).then(user => {
-          console.log("NIGGEEEEEE");
-          console.log(user);
           apiRes.successNoAuth(res, "Updated Avatar.", {
             type: user[0].type,
             avatar: user[0].avatar,
